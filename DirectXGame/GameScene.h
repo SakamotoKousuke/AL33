@@ -3,6 +3,7 @@
 #include "Player.h"
 #include <vector>
 #include "Skydome.h"
+#include "MapChipField.h"
 
 class GameScene
 {
@@ -11,6 +12,8 @@ class GameScene
 
 	public:
 
+
+		/*GameScene(); */      // ← 明示的に追加する
 		~GameScene() ;
 		void Initialize();
 
@@ -50,4 +53,18 @@ class GameScene
 	 /*   bool isDebugCameraActive_ = false;*/
 
 		//KamataEngine::DebugCamera* debugCamera_ = nullptr;
+
+		MapChipField* mapChipField_;
+
+		static constexpr uint32_t kNumBlockVirtical = 10;
+	    static constexpr uint32_t kNumBlockHorizontal = 20;
+	    static constexpr float kBlockWidth = 2.0f;
+	    static constexpr float kBlockHeight = 2.0f;
+
+		//worldTransformBlocks_.resize(kNumBlockVirtical); // OK！
+
+		void GenerateBlocks();
+
+		 /*MapChipField* mapChipField_ = nullptr;*/    // ヘッダ内で安全に初期化（C++11以上）
+
 };

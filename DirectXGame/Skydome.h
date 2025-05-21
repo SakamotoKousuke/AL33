@@ -12,6 +12,11 @@ class Skydome {
 
 		void Draw();
 
+		// GameScene.h の class GameScene の中
+
+	    Skydome* skydome_ = nullptr;
+
+
 	private:
 
 			KamataEngine::WorldTransform worldTransform_;

@@ -2,8 +2,6 @@
 #include "KamataEngine.h"
 #include "GameScene.h"
 
-
-
 using namespace KamataEngine;
 
 // Windowsアプリでのエントリーポイント(main関数)
@@ -21,6 +19,9 @@ KamataEngine::Initialize(L"LE2D_11_サカモト_コウスケ_AL3");
 	GameScene* gameScene = new GameScene();
 
 	gameScene->Initialize();
+
+
+
 
 	//メインループ
 	while (true) {

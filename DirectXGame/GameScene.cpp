@@ -14,6 +14,10 @@ GameScene::~GameScene() {
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 		
+			if (!worldTransformBlock)
+
+				continue;
+
 			delete worldTransformBlock;
 		}
 	}
@@ -31,7 +35,7 @@ GameScene::~GameScene() {
 
 	delete mapChipField_;
 
-	GenerateBlocks();
+	
 
 }
 
@@ -48,7 +52,11 @@ void GameScene::Initialize() {
 	// 自キャラの生成
 	player_ = new Player();
 	// 自キャラの初期化
-	player_->Initialize(model_, textureHandle_, &camera_);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
+
+	player_->Initialize(model_, &camera_, playerPosition);
+
+
 
 	// 3Dモデル
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
@@ -66,6 +74,10 @@ void GameScene::Initialize() {
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
 
 	GenerateBlocks();
+
+	
+	
+
 
 	// 要素数
 

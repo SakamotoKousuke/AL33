@@ -1,11 +1,48 @@
 #pragma once
 #include "KamataEngine.h"
+#include <math/Vector3.h>
+
+
+enum class LRDirection {
+	kRight,
+	kLeft,
+};
+
+
 class Player {
 public:
 
+	bool onGround_ = true;
 
+	static inline const float kGravityAcceleration = 0.1f;
 
-	void Initialize(KamataEngine::Model* model, uint32_t textureHandle,KamataEngine::Camera* camera);
+	static inline const float kLimitFallSpeed = 2.0f;
+
+	static inline const float kAcceleration = 0.05f;
+
+	static inline const float kAttenuation = 0.1f;
+
+	static inline const float kJumpAccleration = 1.0f;
+
+	float turnFirstRotationY_ = 0.0f;
+
+	float turnTimer_ = 0.0f;
+
+	static inline const float kTimeTurn = 0.3f;
+
+	static inline const float kLimitRunSpeed = 1.0f;
+
+	enum class LRDirection {
+		kRight,
+		kLeft,
+	};
+
+	
+
+	/*void Initialize(KamataEngine::Model* model, uint32_t textureHandle,KamataEngine::Camera* camera);*/
+	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const KamataEngine::Vector3& position);
+
+	//void Initialize(KamataEngine::Model model, KamataEngine::Camera camera, const KamataEngine::Vector3& position);
 
 	void Update();
 
@@ -24,7 +61,9 @@ public:
 
 		KamataEngine::Camera* camera_;
 
+		LRDirection lrDirection_ = LRDirection::kRight;
 		
+		KamataEngine::Vector3 velocity_ = {};
 };
 
 

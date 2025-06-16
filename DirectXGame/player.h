@@ -12,6 +12,8 @@ enum class LRDirection {
 class Player {
 public:
 
+	const KamataEngine::WorldTransform& GetWorldTransform() const { return worldTransform_; } 
+
 	bool onGround_ = true;
 
 	static inline const float kGravityAcceleration = 0.1f;
@@ -30,7 +32,12 @@ public:
 
 	static inline const float kTimeTurn = 0.3f;
 
+	const KamataEngine::Vector3& GetVelocity() const { return velocity_; }
+
+
 	static inline const float kLimitRunSpeed = 1.0f;
+
+	
 
 	enum class LRDirection {
 		kRight,

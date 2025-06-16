@@ -146,8 +146,9 @@ void Player::Update() {
 		/*worldTransform_.rotation_.y = desttinationRotationY;*/
 		/*worldTransform_.rotation_.y = turnFirstRotationY_;*/
 		worldTransform_.rotation_.y = EaseInOut(destinationRotationY, turnFirstRotationY_, turnTimer_ / kTimeTurn);
+		
 	}
-
+	
 
 	// アフィン変更行列の作成
 	/*worldTransformBlock->matWorld_=アフィン変更行列;*/

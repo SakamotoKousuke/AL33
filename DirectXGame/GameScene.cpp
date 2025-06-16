@@ -11,6 +11,7 @@ GameScene::~GameScene() {
 	delete modelSkydome_;
 	
 
+
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 		
@@ -24,8 +25,6 @@ GameScene::~GameScene() {
 
 	
 
-	
-
 	delete debugCamera_;
 
 	delete modelBlock_;
@@ -35,7 +34,7 @@ GameScene::~GameScene() {
 
 	delete mapChipField_;
 
-	
+	delete cameraController_;
 
 }
 
@@ -49,14 +48,39 @@ void GameScene::Initialize() {
 
 	modelBlock_ = Model::CreateFromOBJ("block");
 
+	//カメラを持たせる
+
+
 	// 自キャラの生成
 	player_ = new Player();
+
+
+
 	// 自キャラの初期化
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
+
+
 
 	player_->Initialize(model_, &camera_, playerPosition);
 
 
+	
+	// カメラコントローラーの生成
+	cameraController_ = new CameraController();
+
+
+
+	// カメラコントローラーの初期化
+	cameraController_->Initialize();
+
+
+	
+// プレイヤーのWorldTransformを追従対象に設定
+	cameraController_->SetTargrt(player_); // ← OK
+
+	// カメラの位置をプレイヤーに瞬時に追従させる（初期配置）
+	cameraController_->Reset();
+	
 
 	// 3Dモデル
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
@@ -71,13 +95,17 @@ void GameScene::Initialize() {
 
 	mapChipField_ = new MapChipField;
 
+	
+	
+
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
 
 	GenerateBlocks();
 
 	
-	
+	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
 
+	cameraController_->SetMovableArea(cameraArea);
 
 	// 要素数
 
@@ -148,6 +176,8 @@ void GameScene::Update() {
 
 	skydome_->Update();
 
+	cameraController_->Update();
+
 	#ifdef _DEBUG
 	if (Input::GetInstance()->TriggerKey(DIK_0)) {
 		isDebugCameraActive_ = !isDebugCameraActive_;
@@ -164,6 +194,12 @@ void GameScene::Update() {
 
 	} else {
 		camera_.UpdateMatrix();
+		
+			camera_.matView = cameraController_->GetViewProjection().matView;
+			camera_.matProjection = cameraController_->GetViewProjection().matProjection;
+			// ビュープロじぇぅション行列の転送
+			camera_.TransferMatrix();
+		
 	}
 
 	// ブロックの更新
@@ -184,7 +220,9 @@ void GameScene::Update() {
 		}
 	}
 
-
+	
+	
+	
 
 
 }
@@ -247,6 +285,7 @@ void GameScene::Draw() {
 		}
 	}
 
+	cameraController_->Update();
 
 
 }

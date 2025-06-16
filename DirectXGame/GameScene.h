@@ -4,6 +4,7 @@
 #include <vector>
 #include "Skydome.h"
 #include "MapChipField.h"
+#include "CameraController.h"
 
 class GameScene
 {
@@ -35,6 +36,7 @@ class GameScene
 
 		Skydome* skydome_ = nullptr;
 
+		
 
 		std::vector<std::vector<KamataEngine::WorldTransform*>> worldTransformBlocks_;
 
@@ -55,6 +57,10 @@ class GameScene
 		//KamataEngine::DebugCamera* debugCamera_ = nullptr;
 
 		MapChipField* mapChipField_;
+
+		CameraController* cameraController_;
+
+		
 
 		static constexpr uint32_t kNumBlockVirtical = 10;
 	    static constexpr uint32_t kNumBlockHorizontal = 20;

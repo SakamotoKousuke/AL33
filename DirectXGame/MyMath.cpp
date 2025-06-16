@@ -10,11 +10,11 @@ KamataEngine::Matrix4x4 MakeAffineMatrix(KamataEngine::Vector3 &scale, KamataEng
 	Matrix4x4 matRotX = MakeRotateXMatrix(rotation.x);
 	Matrix4x4 matRotY = MakeRotateYMatrix(rotation.y);
 	Matrix4x4 matRotZ = MakeRotateZMatrix(rotation.z);
-	Matrix4x4 matRot =matRotZ*matRotX=matRotY;
+	Matrix4x4 matRot =matRotZ*matRotX*matRotY;
 	// 平行移動行列の作成
 	Matrix4x4 matTrans = MakeTranslateMatrix(translation);
 	// スケーリング、回転、平行移動の合成
-	Matrix4x4 matWorld = matScale*matRot=matTrans;
+	Matrix4x4 matWorld = matScale*matRot*matTrans;
 	return matWorld;
 }
 float EaseInOut(float x1, float x2, float t) {

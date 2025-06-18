@@ -18,11 +18,24 @@ struct MapChipData {
 
 
 
-
-
 class MapChipField {
 
 public:
+
+
+	
+struct Rect {
+		float left;   // 左端
+		float right;  // 右端
+		float bottom; // 下端
+		float top;    // 上端
+	};
+
+
+struct IndexSet {
+		uint32_t xIndex;
+		uint32_t yIndex;
+	};
 
 
 	// 1ブロックのサイズ
@@ -46,4 +59,9 @@ public:
 	uint32_t GetNumBlockVirtical() const { return kNumBlockVirtical; }
 	uint32_t GetNumBlockHorizontal() const { return kNumBlockHorizontal; }
 
+	
+IndexSet GetMapChipIndexSetByPosition(const Vector3& position);
+
+
+Rect GetRectByIndex(uint32_t xIndex, uint32_t yIndex);
 };

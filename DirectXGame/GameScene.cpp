@@ -50,6 +50,13 @@ void GameScene::Initialize() {
 
 	//カメラを持たせる
 
+	
+	mapChipField_ = new MapChipField;
+
+	
+	
+	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
+
 
 	// 自キャラの生成
 	player_ = new Player();
@@ -63,6 +70,8 @@ void GameScene::Initialize() {
 
 	player_->Initialize(model_, &camera_, playerPosition);
 
+
+	player_->SetMapChipField(mapChipField_);
 
 	
 	// カメラコントローラーの生成
@@ -93,12 +102,8 @@ void GameScene::Initialize() {
 
 	modelBlock_ = Model::CreateFromOBJ("block");
 
-	mapChipField_ = new MapChipField;
 
 	
-	
-
-	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
 
 	GenerateBlocks();
 

@@ -2,6 +2,7 @@
 #include "KamataEngine.h"
 #include <math/Vector3.h>
 
+class MapChipField;
 
 enum class LRDirection {
 	kRight,
@@ -9,8 +10,29 @@ enum class LRDirection {
 };
 
 
+enum Corner {
+	kRightBottom,     //右下 
+	kLeftBottom, //左下 
+	kRightTop,//右上 
+	kLeftTop,// 左上
+
+	kNumCorner// 要素
+
+
+};
+
+
+
 class Player {
 public:
+
+	
+struct CollisionMapInfo {
+		bool ceiling = false; // 天井衝突
+		bool landing = false; // 天井衝突
+		bool hitWall = false; // 壁接触
+		KamataEngine::Vector3 move; // 移動量
+	};
 
 	const KamataEngine::WorldTransform& GetWorldTransform() const { return worldTransform_; } 
 
@@ -37,7 +59,11 @@ public:
 
 	static inline const float kLimitRunSpeed = 1.0f;
 
-	
+	static inline const float kWidth = 0.8f;
+
+	static inline const float kHeight = 0.8f;
+
+	static inline const float kBlank = 10;
 
 	enum class LRDirection {
 		kRight,
@@ -49,12 +75,31 @@ public:
 	/*void Initialize(KamataEngine::Model* model, uint32_t textureHandle,KamataEngine::Camera* camera);*/
 	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const KamataEngine::Vector3& position);
 
+	void InputMove();
+
 	//void Initialize(KamataEngine::Model model, KamataEngine::Camera camera, const KamataEngine::Vector3& position);
+
+	void AnimateTurn();
+
+	/*Vector3 CornerPosition(const KamataEngine::Vector3& center, Corner corner);*/
+	KamataEngine::Vector3 CornerPosition(const KamataEngine::Vector3& center, Corner corner);
+
 
 	void Update();
 
 
 	void Draw();
+
+	void SetMapChipField(MapChipField* mapChipField) { mapChipField_=mapChipField; }
+
+	void CheckMapCollision(CollisionMapInfo& info);
+
+	void CheckMapCollisionUP(CollisionMapInfo& info);
+
+	void ApplyMapCollisionInfo(const CollisionMapInfo& info);
+
+	void ApplyCollisionMapInfo(const CollisionMapInfo& info);
+
 
 
 	private:
@@ -71,6 +116,9 @@ public:
 		LRDirection lrDirection_ = LRDirection::kRight;
 		
 		KamataEngine::Vector3 velocity_ = {};
+
+		MapChipField* mapChipField_ = nullptr;
+
 };
 
 

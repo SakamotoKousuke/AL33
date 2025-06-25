@@ -12,14 +12,21 @@ using namespace KamataEngine;
 using namespace MathUtility;
 
 void Player::Initialize( Model* model, Camera* camera, const Vector3& position) { 
+	
+	//NULLポインタチェック
 	assert(model);
-	camera_ = camera;
-	//model_->Draw(worldTransform_, camera_, textureHandle);
+	
+	//引数として受け取ったデータをメンバ変数に記録する
 	model_ = model;
-	//textureHandle_ = textureHandle;
-	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
 
+	//引数の内容をメンバ変数に記録
+	camera_ = camera;
+
+	//ワールド変換の初期化
+	worldTransform_.Initialize();
+
+	//初期回転
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
 
 }
@@ -28,24 +35,32 @@ void Player::Initialize( Model* model, Camera* camera, const Vector3& position) 
 
 void Player::Update() {
 
+	//移動入力
 	InputMove();
 
-	AnimateTurn();
-	/*worldTransform_.translation_ += velocity_;*/
-
-	//// アフィン変更行列の作成
-	///*worldTransformBlock->matWorld_=アフィン変更行列;*/
-	// worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
-
-	// worldTransform_.TransferMatrix();
-
+	//移動量を加味して衝突判定をする
+	
 	// 衝突情報を初期化
 	CollisionMapInfo collisionMapInfo;
 	// 移動量に速度の値をコピー
 	collisionMapInfo.move = velocity_;
 
+	//マップ衝突チェック
 	CheckMapCollision(collisionMapInfo);
 
+	//判定結果を反映して移動させる
+	//移動
+	//worldTransform_.translation_+=velocity_;
+	CheckMapMove(collisionMapInfo);
+
+	//天井に接触してる場合の処理
+	CheckMapCeiling(collisionMapInfo);
+
+	//壁に接触している場合の処理
+
+	//接地状態の切り替え
+
+	//着地フラグ
 	bool landing = false;
 
 	if (velocity_.y < 0) {
@@ -75,6 +90,9 @@ void Player::Update() {
 		}
 	}
 
+	//Animate制御
+	AnimateTurn();
+
 	worldTransform_.translation_ += velocity_;
 
 	// アフィン変更行列の作成
@@ -103,6 +121,7 @@ void Player::Draw() {
 
 					velocity_.x *= (1.0f - kAttenuation);
 				}
+				acceleration.x += kAcceleration;
 				if (lrDirection_ != LRDirection::kRight) {
 					lrDirection_ = LRDirection::kRight;
 
@@ -112,7 +131,7 @@ void Player::Draw() {
 					turnTimer_ = kTimeTurn;
 				}
 
-				acceleration.x += kAcceleration;
+				
 			} else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
 
 				if (velocity_.x > 0.0f) {
@@ -121,7 +140,7 @@ void Player::Draw() {
 				}
 
 				acceleration.x -= kAcceleration;
-				velocity_.x *= (1.0f - kAttenuation);
+				/*velocity_.x *= (1.0f - kAttenuation);*/
 				if (lrDirection_ != LRDirection::kLeft)
 					lrDirection_ = LRDirection::kLeft;
 
@@ -135,6 +154,9 @@ void Player::Draw() {
 			velocity_ += acceleration;
 
 			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
+		} else {
+		//非入力時は移動減衰をかける
+			velocity_.x *= (1.0f - kAttenuation);
 		}
 		if (Input::GetInstance()->PushKey(DIK_UP)) {
 			// ジャンプ加速
@@ -149,16 +171,18 @@ void Player::Draw() {
 }
 
 	
-	void Player::CheckMapCollision(CollisionMapInfo& info) {
-	CheckMapCollisionUP(info);
-	// CheckMapCollisionDown (info);
-	// CheckMapCollisionRight(info);
-	// CheckMapCollisionLeft(info);
-}
-
 	
+	void Player::CheckMapCollision( CollisionMapInfo& info) {
+	
+	    CheckMapCollisionUP(info);
+	    // CheckMapCollisionDown (info);
+	    // CheckMapCollisionRight(info);
+	    // CheckMapCollisionLeft(info);
+	}
 
-	void Player::CheckMapCollisionUP(CollisionMapInfo& info) {
+void Player::CheckMapCollisionUP(CollisionMapInfo& info) {
+	
+	
 
 	if (info.move.y <= 0) {
 		return;
@@ -182,6 +206,7 @@ void Player::Draw() {
 		hit = true;
 	}
 	// 右上点の判定
+
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	if (mapChipType == MapChipType::kBlock) {
@@ -192,15 +217,50 @@ void Player::Draw() {
 
 		indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + info.move + Vector3(0, +kHeight / 2.0f, 0));
 
+		MapChipField::IndexSet indexSetNow;
+
 		MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
-		info.move.y = std::max(0.0f, info.move.y);
-
-		info.ceiling = true;
+		indexSetNow = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + Vector3(0, +kHeight / 2.0f, 0));
 
 		
-	}
+			
+			info.move.y = std::max(0.0f, info.move.y);
+
+			info.ceiling = true;
+		}
+	
     }
+
+
+    void Player::CheckMapMove(const CollisionMapInfo& info)
+	{
+		//移動
+	    worldTransform_.translation_ += info.move;
+    }
+
+    void Player::CheckMapCeiling(const CollisionMapInfo& info) 
+	{
+	    // 天井に当たった?
+	    if (info.ceiling) {
+		    DebugText::GetInstance()->ConsolePrintf("hit ceiling\n");
+		    velocity_.y = 0;
+	    }
+	}
+
+
+	
+	/*void Player::CheckMapCollision(CollisionMapInfo& info) { 
+		if (info.ceiling) {
+		    DebugText::GetInstance()->ConsolePrintf("hit ceiling\n");
+		    velocity_.y = 0;
+
+		}
+
+
+
+	}*/
+
 
 
 	void Player::AnimateTurn() {

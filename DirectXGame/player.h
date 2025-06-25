@@ -92,14 +92,21 @@ struct CollisionMapInfo {
 
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_=mapChipField; }
 
-	void CheckMapCollision(CollisionMapInfo& info);
+	
 
 	void CheckMapCollisionUP(CollisionMapInfo& info);
 
+	void CheckMapMove(const CollisionMapInfo& info);
+
+	void CheckMapCeiling(const CollisionMapInfo& info);
+
+	void CheckMapCollision(CollisionMapInfo& info);
+
 	void ApplyMapCollisionInfo(const CollisionMapInfo& info);
 
-	void ApplyCollisionMapInfo(const CollisionMapInfo& info);
+	//void ApplyCollisionMapInfo(const CollisionMapInfo& info);
 
+	
 
 
 	private:

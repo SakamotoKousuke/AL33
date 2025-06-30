@@ -214,20 +214,22 @@ void Player::CheckMapCollisionUP(CollisionMapInfo& info) {
 	}
 
 	if (hit) {
-
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + info.move + Vector3(0, +kHeight / 2.0f, 0));
-
+		/*indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + info.move + Vector3(0, +kHeight / 2.0f, 0));
 		MapChipField::IndexSet indexSetNow;
-
 		MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
-
 		indexSetNow = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + Vector3(0, +kHeight / 2.0f, 0));
-
-		
-			
 			info.move.y = std::max(0.0f, info.move.y);
+			info.ceiling = true;*/
 
-			info.ceiling = true;
+		// めり込みを排除する方向に移動量を設定する
+		indexSet = mapChipField_-> GetMapChipIndexSetByPosition(worldTransform_.translation_ + info.move + Vector3(0, +kHeight / 2.0f, 0));
+		// めり込み先ブロックの範囲矩形
+		MapChipField::Rect rect = mapChipField_-> GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
+		info.move.y = max(0.0f, rect.bottom(kHeight / 2.0f + kBlank));
+		worldTransform_.translation_.y - (kHeight / 2.0f + kBlank));
+		        // 天井に当たったことを記録する
+		        info.ceiling = true;
+
 		}
 	
     }

@@ -65,6 +65,8 @@ struct CollisionMapInfo {
 
 	static inline const float kBlank = 10;
 
+	static inline const float kAttenuationLanding = 1.0f;
+
 	enum class LRDirection {
 		kRight,
 		kLeft,
@@ -96,6 +98,8 @@ struct CollisionMapInfo {
 
 	void CheckMapCollisionUP(CollisionMapInfo& info);
 
+	void CheckMapCollisionDown(CollisionMapInfo& info);
+
 	void CheckMapMove(const CollisionMapInfo& info);
 
 	void CheckMapCeiling(const CollisionMapInfo& info);
@@ -103,6 +107,10 @@ struct CollisionMapInfo {
 	void CheckMapCollision(CollisionMapInfo& info);
 
 	void ApplyMapCollisionInfo(const CollisionMapInfo& info);
+
+	/*void CheckCollisionMapInfo(const CollisionMapInfo& info);*/
+
+	void CheckMapLanding(const CollisionMapInfo& info);
 
 	//void ApplyCollisionMapInfo(const CollisionMapInfo& info);
 

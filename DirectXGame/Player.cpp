@@ -305,7 +305,7 @@ void Player::CheckMapCollisionDown(CollisionMapInfo& info)
 	    }
 	}
 
-
+	//
 
 	////地面と接触している場合の処理
  //   void Player::CheckCollisionMapInfo(const CollisionMapInfo& info) {

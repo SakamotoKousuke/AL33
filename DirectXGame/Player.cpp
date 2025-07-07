@@ -59,7 +59,7 @@ void Player::Update() {
 	//壁に接触している場合の処理
 
 	//接地状態の切り替え
-	/*CheckMapLanding(collisionMapInfo);*/
+	CheckMapLanding(collisionMapInfo);
 
 
 
@@ -266,7 +266,7 @@ void Player::CheckMapCollisionDown(CollisionMapInfo& info)
 	if (mapChipType == MapChipType::kBlock) {
 		hit = true;
 	}
-	// 右上点の判定
+	// 右下点の判定
 
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
@@ -281,8 +281,11 @@ void Player::CheckMapCollisionDown(CollisionMapInfo& info)
 
 		MapChipField::Rect rect=mapChipField_->GetRectByIndex(indexSet.xIndex,indexSet.yIndex);
 
-		info.move.y = std::min(0.0f, rect.bottom-worldTransform_.translation_.y-(kHeight/2.0f+kBlank));
-		
+		/*info.move.y = std::min(0.0f, rect.bottom-worldTransform_.translation_.y-(kHeight/2.0f+kBlank));
+		*/
+
+		// info.move.y = std::max(0.0f, rect.bottom - worldTransform_.translation_.y - (kHeight / 2.0f + kBlank));
+		info.move.y = std::min(0.0f, rect.top - worldTransform_.translation_.y - (kHeight / 2.0f + kBlank));
 
 		info.landing = true;
 	}
@@ -368,18 +371,60 @@ void Player::CheckMapCollisionDown(CollisionMapInfo& info)
 
 	//接地状態の切り替え
 	void Player::CheckMapLanding(const CollisionMapInfo& info) {
-		//自キャラが接地状態？
+	    // 自キャラが接地状態？
 	    if (onGround_) {
-	    
-			//接地状態の処理
 
-			//ジャンプ開始
-			 if (velocity_.y > 0.0f) {
+		    // 接地状態の処理
+
+		    // ジャンプ開始
+		    if (velocity_.y > 0.0f) {
 			    onGround_ = false;
-		    } 
-		} else {
-	    
-			//空中状態の処理
+		    } else {
+
+			    // 落下判定
+
+			    // 移動後の４つの角の座標
+
+			    // 左下店の判定
+
+			    // 右下店の判定
+
+			    // 移動後の４つの角の座標
+			    std::array<Vector3, kNumCorner> positionsNew;
+
+			    for (uint32_t i = 0; i < positionsNew.size(); ++i) {
+				    positionsNew[i] = CornerPosition(worldTransform_.translation_ + info.move, static_cast<Corner>(i));
+			    }
+
+			    MapChipType mapChipType;
+
+			    bool hit = false;
+
+			    // 左下店の判定
+			    MapChipField::IndexSet indexSet;
+			    indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
+			    mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex); // ← これが抜けていた
+			    if (mapChipType == MapChipType::kBlock) {
+				    hit = true;
+			    }
+
+			    // 左下店の判定
+
+			    indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
+			    mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex); // ← これが抜けていた
+			    if (mapChipType == MapChipType::kBlock) {
+				    hit = true;
+			    }
+
+			    // 落下なら空中状態に切り替え
+			    if (!hit) {
+				    // 空中状態に切り替える
+		//		    onGround_ = false;
+			    }
+		    }
+	    } else {
+
+		    // 空中状態の処理
 		    if (info.landing) {
 
 			    onGround_ = true;
@@ -388,12 +433,8 @@ void Player::CheckMapCollisionDown(CollisionMapInfo& info)
 
 			    velocity_.y = 0.0f;
 		    }
-
-
-		}
-
-
-	}
+	    }
+    }
 
 
 	void Player::AnimateTurn() {

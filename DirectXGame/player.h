@@ -63,7 +63,7 @@ struct CollisionMapInfo {
 
 	static inline const float kHeight = 0.8f;
 
-	static inline const float kBlank = 10;
+	static inline const float kBlank = 0.1f;
 
 	static inline const float kAttenuationLanding = 1.0f;
 

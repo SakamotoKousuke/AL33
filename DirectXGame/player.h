@@ -67,6 +67,10 @@ struct CollisionMapInfo {
 
 	static inline const float kAttenuationLanding = 1.0f;
 
+	static inline const float kGroundSearchHeight = 1.0f;
+	//壁の速度減衰率
+	static inline const float kAttenuationWall = 1.0f;
+
 	enum class LRDirection {
 		kRight,
 		kLeft,
@@ -114,8 +118,11 @@ struct CollisionMapInfo {
 
 	//void ApplyCollisionMapInfo(const CollisionMapInfo& info);
 
-	
+	void CheckMapCollisionRight(CollisionMapInfo& info);
 
+	void CheckMapCollisionLeft(CollisionMapInfo& info);
+
+	void CheckMapWall(const CollisionMapInfo& info);
 
 	private:
 		//ワールド変換データ
@@ -134,6 +141,7 @@ struct CollisionMapInfo {
 
 		MapChipField* mapChipField_ = nullptr;
 
+		
 };
 
 

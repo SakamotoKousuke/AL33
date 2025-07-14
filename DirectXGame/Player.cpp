@@ -310,7 +310,7 @@ void Player::CheckMapCollisionRight(CollisionMapInfo& info) {
 	/*if (mapChipType == MapChipType::kBlock) {*/
 	mapChipTypeNext = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex - 1, indexSet.yIndex);
 	// 隣接セルがともにブロックであればヒット
-	if (mapChipType == MapChipType::kBlock && mapChipTypeNext != MapChipType::kBlock) {
+	if (mapChipType == MapChipType::kBlock /*&& mapChipTypeNext != MapChipType::kBlock*/) {
 		hit = true;
 	}
 
@@ -319,31 +319,31 @@ void Player::CheckMapCollisionRight(CollisionMapInfo& info) {
 	/*if (mapChipType == MapChipType::kBlock) {*/
 	mapChipTypeNext = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex - 1, indexSet.yIndex);
 	// 隣接セルがともにブロックであればヒット
-	if (mapChipType == MapChipType::kBlock && mapChipTypeNext != MapChipType::kBlock) {
+	if (mapChipType == MapChipType::kBlock /*&& mapChipTypeNext != MapChipType::kBlock*/) {
 		hit = true;
 	}
 
 	if (hit) {
 
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + info.move + Vector3(0, -kHeight / 2.0f, 0));
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + info.move + Vector3(+kHeight / 2.0f, 0,0));
 
 		MapChipField::IndexSet indexSetNow;
 		indexSetNow = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + Vector3(0, -kHeight / 2.0f, 0));
-			if (indexSetNow.yIndex != indexSet.yIndex) {
+			/*if (indexSetNow.yIndex != indexSet.yIndex) {*/
 			MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 			/*info.move.y = std::min(0.0f, rect.bottom-worldTransform_.translation_.y-(kHeight/2.0f+kBlank));
 			 */
 			// info.move.y = std::max(0.0f, rect.bottom - worldTransform_.translation_.y - (kHeight / 2.0f + kBlank));
-			info.move.y = std::min(0.0f, rect.top - worldTransform_.translation_.y + (kHeight / 2.0f + kBlank));
-			info.landing = true;
-		}
+			info.move.x = std::max(0.0f, rect.left - worldTransform_.translation_.x - (kWidth / 2.0f + kBlank));
+			info.hitWall = true;
+		/*}*/
 	}
 
 
 }
 
 void Player::CheckMapCollisionLeft(CollisionMapInfo& info) {
-	if (info.move.x <= 0) {
+	if (info.move.x >= 0) {
 		return;
 	}
 	// 移動後の４つの角の座標
@@ -366,32 +366,32 @@ void Player::CheckMapCollisionLeft(CollisionMapInfo& info) {
 	/*if (mapChipType == MapChipType::kBlock) {*/
 	mapChipTypeNext = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex+1, indexSet.yIndex);
 	// 隣接セルがともにブロックであればヒット
-	if (mapChipType == MapChipType::kBlock && mapChipTypeNext != MapChipType::kBlock) {
+	if (mapChipType == MapChipType::kBlock /*&& mapChipTypeNext != MapChipType::kBlock*/) {
 		hit = true;
 	}
 
-	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	/*if (mapChipType == MapChipType::kBlock) {*/
 	mapChipTypeNext = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex+1, indexSet.yIndex);
 	// 隣接セルがともにブロックであればヒット
-	if (mapChipType == MapChipType::kBlock && mapChipTypeNext != MapChipType::kBlock) {
+	if (mapChipType == MapChipType::kBlock /*&& mapChipTypeNext != MapChipType::kBlock*/) {
 		hit = true;
 	}
 	if (hit) {
 
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + info.move + Vector3(0, -kHeight / 2.0f, 0));
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + info.move + Vector3(-kWidth/ 2.0f, 0,0));
 
-		MapChipField::IndexSet indexSetNow;
-		indexSetNow = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + Vector3(0, +kHeight / 2.0f, 0));
-			if (indexSetNow.yIndex != indexSet.yIndex) {
+		/*MapChipField::IndexSet indexSetNow;
+		indexSetNow = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + Vector3(0, +kHeight / 2.0f, 0));*/
+			/*if (indexSetNow.yIndex != indexSet.yIndex) {*/
 			MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 			/*info.move.y = std::min(0.0f, rect.bottom-worldTransform_.translation_.y-(kHeight/2.0f+kBlank));
 			 */
 			// info.move.y = std::max(0.0f, rect.bottom - worldTransform_.translation_.y - (kHeight / 2.0f + kBlank));
-			info.move.y = std::min(0.0f, rect.top - worldTransform_.translation_.y + (kHeight / 2.0f + kBlank));
-			info.landing = true;
-		}
+			info.move.x = std::max(0.0f, rect.left - worldTransform_.translation_.x + (kWidth / 2.0f + kBlank));
+			info.hitWall = true;
+		/*}*/
 	}
 
 

@@ -26,7 +26,7 @@ void Enemy::Update() {
 
 	walkTimer_ += 1.0f / 60.0f;
 
-	worldTransform_.rotation_.x = std::sin(walkTimer_ * 50.0f);
+	worldTransform_.rotation_.x = std::sin(walkTimer_ * 0.0f);
 	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 	worldTransform_.rotation_.y = -std::numbers::pi_v<float> / 2.0f;
 

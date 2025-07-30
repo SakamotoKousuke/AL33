@@ -1,5 +1,6 @@
 #include "GameScene.h"
 #include "MyMath.h"
+#include "Enemy.h"
 
 using namespace KamataEngine;
 
@@ -10,7 +11,7 @@ GameScene::~GameScene() {
 
 	delete modelSkydome_;
 	
-
+	delete modelenemy_;
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -46,6 +47,8 @@ void GameScene::Initialize() {
 
 	model_ = Model::CreateFromOBJ("player");
 
+	modelenemy_ = Model::CreateFromOBJ("enemy");
+
 	modelBlock_ = Model::CreateFromOBJ("block");
 
 	//カメラを持たせる
@@ -58,18 +61,21 @@ void GameScene::Initialize() {
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
 
 
+
 	// 自キャラの生成
 	player_ = new Player();
 
-
+	enemy_ = new Enemy();
 
 	// 自キャラの初期化
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
 
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(5, 18);
 
 
 	player_->Initialize(model_, &camera_, playerPosition);
 
+	enemy_->Initialize(modelenemy_, &camera_, enemyPosition);
 
 	player_->SetMapChipField(mapChipField_);
 
@@ -177,6 +183,8 @@ void GameScene::Update() {
 //自キャラの更新
 	player_->Update();
 
+	enemy_->Update();
+
 	debugCamera_->Update();
 
 	skydome_->Update();
@@ -241,6 +249,8 @@ void GameScene::Draw() {
 	// 自分キャラの描画
 	player_->Draw();
 	// ブロックの描画
+
+	enemy_->Draw();
 
 	skydome_->Draw();
 

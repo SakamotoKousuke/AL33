@@ -1,6 +1,7 @@
 #pragma once
 #include "KamataEngine.h"
 #include "Player.h"
+#include "Enemy.h"
 #include <vector>
 #include "Skydome.h"
 #include "MapChipField.h"
@@ -31,10 +32,16 @@ class GameScene
 	    // 3Dモデルデータ
 	    KamataEngine::Model* modelSkydome_ = nullptr;
 
+		KamataEngine::Model* modelenemy_ = nullptr;
+
+
+
 
 		Player* player_ = nullptr;
 
 		Skydome* skydome_ = nullptr;
+
+		Enemy* enemy_ = nullptr;
 
 		
 

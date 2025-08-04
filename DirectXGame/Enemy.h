@@ -13,6 +13,7 @@ public:
 
 	void Draw();
 
+	
 
 	//static inline const float kWalkMotionTime = 1.0f;
 

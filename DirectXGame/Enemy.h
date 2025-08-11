@@ -1,5 +1,13 @@
 #pragma once
 #include <KamataEngine.h>
+#include "MyMath.h"
+//
+//enum class LRDirection {
+//	kRight,
+//	kLeft,
+//};
+
+class Player;
 
 class Enemy {
 public:
@@ -13,7 +21,11 @@ public:
 
 	void Draw();
 
-	
+	static inline const float kWidth = 0.8f;
+
+	static inline const float kHeight = 0.8f;
+
+	KamataEngine::Vector3 GetWorldPosition();
 
 	//static inline const float kWalkMotionTime = 1.0f;
 
@@ -25,4 +37,8 @@ public:
 	KamataEngine::WorldTransform worldTransform_;
 
 	KamataEngine::Camera* camera_;
+
+	AABB GetAABB();
+
+	void OnCollision(const Player* player);
 };

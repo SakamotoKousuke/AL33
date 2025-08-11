@@ -1,6 +1,9 @@
 #include "GameScene.h"
 #include "MyMath.h"
 #include "Enemy.h"
+#include "player.h"
+
+
 
 using namespace KamataEngine;
 
@@ -11,7 +14,7 @@ GameScene::~GameScene() {
 
 	delete modelSkydome_;
 	
-	delete modelenemy_;
+	delete modelEnemy_;
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -24,7 +27,9 @@ GameScene::~GameScene() {
 		}
 	}
 
-	
+	for (Enemy* enemy : enemies_) {
+		delete enemy;
+	}
 
 	delete debugCamera_;
 
@@ -47,7 +52,7 @@ void GameScene::Initialize() {
 
 	model_ = Model::CreateFromOBJ("player");
 
-	modelenemy_ = Model::CreateFromOBJ("enemy");
+	modelEnemy_ = Model::CreateFromOBJ("enemy");
 
 	modelBlock_ = Model::CreateFromOBJ("block");
 
@@ -65,21 +70,24 @@ void GameScene::Initialize() {
 	// 自キャラの生成
 	player_ = new Player();
 
-	enemy_ = new Enemy();
+	/*enemy_ = new Enemy();*/
+	for (int32_t i = 0; i < 10; ++i) {
+		Enemy* newEnemy = new Enemy();
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(6 + i, 18);
+		newEnemy->Initialize(modelEnemy_, &camera_, enemyPosition);
+
+		enemies_.push_back(newEnemy);
+	}
 
 	// 自キャラの初期化
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
 
 	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(5, 18);
 
-
 	player_->Initialize(model_, &camera_, playerPosition);
-
-	enemy_->Initialize(modelenemy_, &camera_, enemyPosition);
 
 	player_->SetMapChipField(mapChipField_);
 
-	
 	// カメラコントローラーの生成
 	cameraController_ = new CameraController();
 
@@ -108,7 +116,7 @@ void GameScene::Initialize() {
 
 	modelBlock_ = Model::CreateFromOBJ("block");
 
-
+	
 	
 
 	GenerateBlocks();
@@ -183,7 +191,9 @@ void GameScene::Update() {
 //自キャラの更新
 	player_->Update();
 
-	enemy_->Update();
+	/*enemy_->Update();*/
+
+	CheckAllCollisions();
 
 	debugCamera_->Update();
 
@@ -234,7 +244,11 @@ void GameScene::Update() {
 	}
 
 	
+	for (Enemy* enemy : enemies_) {
 	
+		enemy->Update();
+
+	}
 	
 
 
@@ -250,7 +264,14 @@ void GameScene::Draw() {
 	player_->Draw();
 	// ブロックの描画
 
-	enemy_->Draw();
+	/*enemy_->Draw();*/
+
+	for (Enemy* enemy : enemies_) {
+	
+	enemy->Draw();
+
+	}
+
 
 	skydome_->Draw();
 
@@ -265,6 +286,9 @@ void GameScene::Draw() {
 	}
 
 	Model::PostDraw();
+
+
+
 }
 
 
@@ -304,4 +328,26 @@ void GameScene::Draw() {
 
 
 }
-//
+    void GameScene::CheckAllCollisions() {
+
+	AABB aabb1, aabb2;
+
+	aabb1 = player_->GetAABB();
+
+	for (Enemy* enemy : enemies_) {
+	
+		aabb2 = enemy->GetAABB();
+
+		if (IsCollision(aabb1, aabb2)) {
+			player_->OnCollision(enemy);
+
+			enemy->OnCollision(player_);
+		}
+
+	
+	}
+
+
+	
+	}
+    //

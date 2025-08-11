@@ -1,6 +1,8 @@
 #pragma once
 #include "KamataEngine.h"
 #include <math/Vector3.h>
+#include "Enemy.h"
+#include "MyMath.h"
 
 class MapChipField;
 
@@ -25,6 +27,7 @@ enum Corner {
 
 class Player {
 public:
+	void OnCollision(const Enemy* enemy);
 
 	
 struct CollisionMapInfo {
@@ -124,6 +127,10 @@ struct CollisionMapInfo {
 
 	void CheckMapWall(const CollisionMapInfo& info);
 
+	KamataEngine::Vector3 GetWorldPosition();
+
+	AABB GetAABB();
+
 	private:
 		//ワールド変換データ
 		KamataEngine::WorldTransform worldTransform_;
@@ -131,7 +138,6 @@ struct CollisionMapInfo {
 	    KamataEngine::Model* model_ = nullptr;
 		//テクスチャハンドル
 	    uint32_t textureHandle_ = 0u;
-
 
 		KamataEngine::Camera* camera_;
 

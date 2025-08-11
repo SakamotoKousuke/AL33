@@ -2,6 +2,7 @@
 #include "Enemy.h"
 #include "MyMath.h"
 #include <numbers>
+#include "player.h"
 using namespace KamataEngine;
 using namespace MathUtility;
 
@@ -37,3 +38,34 @@ void Enemy::Update() {
 
 
 void Enemy::Draw() { model_->Draw(worldTransform_, *camera_); }
+
+
+Vector3 Enemy::GetWorldPosition() {
+
+	Vector3 worldPos;
+
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
+	// return Vector3();
+}
+AABB Enemy::GetAABB() {
+	
+	Vector3 worldPos = GetWorldPosition();
+
+	AABB aabb;
+
+	aabb.min = {worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f};
+	aabb.max = {worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f};
+
+	return aabb;
+
+	/*return AABB();*/
+}
+
+void Enemy::OnCollision(const Player* player) { 
+	(void)player;
+}
+

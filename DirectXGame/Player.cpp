@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cassert>
 #include <numbers>
+#include "Enemy.h"
 
 using namespace KamataEngine;
 
@@ -52,6 +53,8 @@ void Player::Update() {
 
 	// 天井に接触してる場合の処理
 	CheckMapCeiling(collisionMapInfo);
+
+
 
 	// 壁に接触している場合の処理
 	CheckMapWall(collisionMapInfo);
@@ -405,6 +408,43 @@ void Player::CheckMapWall(const CollisionMapInfo& info) {
 
 }
 
+Vector3 Player::GetWorldPosition() { 
+	
+
+	Vector3 worldPos;
+
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
+	//return Vector3();
+
+}
+
+AABB Player::GetAABB() {
+	
+	Vector3 worldPos = GetWorldPosition();
+
+	AABB aabb;
+
+	aabb.min = {worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f};
+	aabb.max = {worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f};
+
+	return aabb;
+
+	
+	/*return AABB(); */
+}
+
+
+
+void Player::OnCollision(const Enemy* enemy) { 
+	(void)enemy;
+
+	velocity_ += Vector3(0.0f, 1.0f, 0.0f);
+}
+
 void Player::CheckMapMove(const CollisionMapInfo& info) {
 	// 移動
 	worldTransform_.translation_ += info.move;
@@ -585,3 +625,4 @@ void Player::ApplyMapCollisionInfo(const CollisionMapInfo& info) {
 	worldTransform_.translation_ += info.move;
 	velocity_.y = 0;
 };
+

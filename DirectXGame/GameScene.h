@@ -6,6 +6,7 @@
 #include "Skydome.h"
 #include "MapChipField.h"
 #include "CameraController.h"
+#include "MyMath.h"
 
 class GameScene
 {
@@ -32,7 +33,7 @@ class GameScene
 	    // 3Dモデルデータ
 	    KamataEngine::Model* modelSkydome_ = nullptr;
 
-		KamataEngine::Model* modelenemy_ = nullptr;
+		KamataEngine::Model* modelEnemy_ = nullptr;
 
 
 
@@ -41,8 +42,8 @@ class GameScene
 
 		Skydome* skydome_ = nullptr;
 
-		Enemy* enemy_ = nullptr;
-
+		/*Enemy* enemy_ = nullptr;*/
+	    std::list<Enemy*> enemies_;
 		
 
 		std::vector<std::vector<KamataEngine::WorldTransform*>> worldTransformBlocks_;
@@ -78,6 +79,8 @@ class GameScene
 
 		void GenerateBlocks();
 
+
+		void CheckAllCollisions();
 		 /*MapChipField* mapChipField_ = nullptr;*/    // ヘッダ内で安全に初期化（C++11以上）
 
 };

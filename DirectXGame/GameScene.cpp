@@ -2,6 +2,7 @@
 #include "MyMath.h"
 #include "Enemy.h"
 #include "player.h"
+#include "DeathParticles.h"
 
 
 
@@ -42,6 +43,7 @@ GameScene::~GameScene() {
 
 	delete cameraController_;
 
+	delete deathParticles_;
 }
 
 
@@ -51,6 +53,8 @@ void GameScene::Initialize() {
 	camera_.Initialize();
 
 	model_ = Model::CreateFromOBJ("player");
+
+	model_ = Model::CreateFromOBJ("deathParticle");
 
 	modelEnemy_ = Model::CreateFromOBJ("enemy");
 
@@ -185,6 +189,11 @@ void GameScene::Initialize() {
 
 	//
 	//}
+
+
+	deathParticles_ = new DeathParticles;
+	deathParticles_->Initialize(kNumParticles, &camera_, playerPosition);
+
 }
 
 void GameScene::Update() {
@@ -250,7 +259,11 @@ void GameScene::Update() {
 
 	}
 	
+	if (deathParticles_){
+		deathParticles_->Update();
+	}
 
+	
 
 }
 
@@ -287,7 +300,9 @@ void GameScene::Draw() {
 
 	Model::PostDraw();
 
-
+	if (deathParticles_) {
+		deathParticles_->Draw();
+	}
 
 }
 

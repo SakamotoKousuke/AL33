@@ -7,6 +7,7 @@
 #include "MapChipField.h"
 #include "CameraController.h"
 #include "MyMath.h"
+#include "DeathParticles.h"
 
 class GameScene
 {
@@ -83,4 +84,6 @@ class GameScene
 		void CheckAllCollisions();
 		 /*MapChipField* mapChipField_ = nullptr;*/    // ヘッダ内で安全に初期化（C++11以上）
 
+
+		DeathParticles* deathParticles_ = nullptr;
 };

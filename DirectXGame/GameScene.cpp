@@ -54,7 +54,7 @@ void GameScene::Initialize() {
 
 	model_ = Model::CreateFromOBJ("player");
 
-	model_ = Model::CreateFromOBJ("deathParticle");
+	modelDeathParticles_ = Model::CreateFromOBJ("deathParticle");
 
 	modelEnemy_ = Model::CreateFromOBJ("enemy");
 
@@ -192,7 +192,7 @@ void GameScene::Initialize() {
 
 
 	deathParticles_ = new DeathParticles;
-	deathParticles_->Initialize(kNumParticles, &camera_, playerPosition);
+	deathParticles_->Initialize(modelDeathParticles_, &camera_, playerPosition);
 
 }
 
@@ -298,12 +298,14 @@ void GameScene::Draw() {
 		}
 	}
 
-	Model::PostDraw();
-
 	if (deathParticles_) {
 		deathParticles_->Draw();
 	}
 
+
+	Model::PostDraw();
+
+	
 }
 
 

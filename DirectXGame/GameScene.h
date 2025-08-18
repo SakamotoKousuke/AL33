@@ -55,6 +55,9 @@ class GameScene
 
 		//モデルブロック
 		KamataEngine::Model* modelBlock_ = nullptr;
+
+		KamataEngine::Model* modelDeathParticles_ = nullptr;
+
 		//3Dモデル
 		/*KamataEngine::Model* modelSkydome_ = nullptr;*/
 

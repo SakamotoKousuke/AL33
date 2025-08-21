@@ -69,7 +69,7 @@ void GameScene::Initialize() {
 	
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
 
-
+	phase_ = Phase::kPlay;
 
 	// 自キャラの生成
 	player_ = new Player();
@@ -77,7 +77,7 @@ void GameScene::Initialize() {
 	/*enemy_ = new Enemy();*/
 	for (int32_t i = 0; i < 10; ++i) {
 		Enemy* newEnemy = new Enemy();
-		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(6 + i, 18);
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10 + i, 18);
 		newEnemy->Initialize(modelEnemy_, &camera_, enemyPosition);
 
 		enemies_.push_back(newEnemy);
@@ -191,18 +191,33 @@ void GameScene::Initialize() {
 	//}
 
 
-	deathParticles_ = new DeathParticles;
-	deathParticles_->Initialize(modelDeathParticles_, &camera_, playerPosition);
-
+	
 }
 
 void GameScene::Update() {
+
+	switch (phase_) { 
+	case Phase::kPlay:
+		CheckAllCollisions();
+		break;
+
+	case Phase::kdeath:
+
+		if (deathParticles_) {
+			deathParticles_->Update();
+		}
+
+		break;
+
+
+	}
+
 //自キャラの更新
 	player_->Update();
 
 	/*enemy_->Update();*/
 
-	CheckAllCollisions();
+	
 
 	debugCamera_->Update();
 
@@ -259,10 +274,6 @@ void GameScene::Update() {
 
 	}
 	
-	if (deathParticles_){
-		deathParticles_->Update();
-	}
-
 	
 
 }
@@ -308,6 +319,20 @@ void GameScene::Draw() {
 	
 }
 
+
+void ::GameScene::ChangePhase() {
+
+	if (player_->IsDead() == true) {
+		phase_ = Phase::kdeath;
+
+		const Vector3& deathParticleaPosition = player_->GetWorldPosition();
+		deathParticles_ = new DeathParticles;
+		deathParticles_->Initialize(modelDeathParticles_, &camera_, deathParticleaPosition);
+
+
+	}
+
+}
 
 	void GameScene::GenerateBlocks() {
 

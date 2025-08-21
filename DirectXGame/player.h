@@ -36,6 +36,10 @@ struct CollisionMapInfo {
 		bool hitWall = false; // 壁接触
 		KamataEngine::Vector3 move; // 移動量
 	};
+    
+    bool isDead_ = false;
+
+	bool IsDead() const { return isDead_; }
 
 	const KamataEngine::WorldTransform& GetWorldTransform() const { return worldTransform_; } 
 

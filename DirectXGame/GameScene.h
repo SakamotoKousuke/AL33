@@ -9,9 +9,15 @@
 #include "MyMath.h"
 #include "DeathParticles.h"
 
+
 class GameScene
 {
 
+	enum class Phase {
+		kPlay,
+		kdeath,
+	};
+	Phase phase_;
 
 
 	public:
@@ -86,7 +92,7 @@ class GameScene
 
 		void CheckAllCollisions();
 		 /*MapChipField* mapChipField_ = nullptr;*/    // ヘッダ内で安全に初期化（C++11以上）
-
+	    void ChangePhase();
 
 		DeathParticles* deathParticles_ = nullptr;
 };

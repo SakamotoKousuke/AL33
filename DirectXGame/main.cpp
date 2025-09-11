@@ -40,9 +40,9 @@ void ChangeScene() {
 			gameScene = nullptr;
 
 			titleScene = new TitleScene;
-			titleScene->Initialize();
+			titleScene->Initialize();//
 		}
-		
+		//lkjnm
 
 		break;
 	}

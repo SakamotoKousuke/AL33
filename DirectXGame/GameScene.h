@@ -42,7 +42,9 @@ class GameScene
 
 		KamataEngine::Model* modelEnemy_ = nullptr;
 
+		bool finished_ = false;
 
+		bool IsFinished() const { return finished_; }
 
 
 		Player* player_ = nullptr;
@@ -93,6 +95,8 @@ class GameScene
 		void CheckAllCollisions();
 		 /*MapChipField* mapChipField_ = nullptr;*/    // ヘッダ内で安全に初期化（C++11以上）
 	    void ChangePhase();
+
+		
 
 		DeathParticles* deathParticles_ = nullptr;
 };

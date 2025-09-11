@@ -106,7 +106,12 @@ void Player::Update() {
 	worldTransform_.TransferMatrix();
 }
 
-void Player::Draw() { model_->Draw(worldTransform_, *camera_); };
+void Player::Draw() {
+	 
+	if (isDead_ == false) {
+		model_->Draw(worldTransform_, *camera_); 
+	}
+};
 
 void Player::InputMove() {
 

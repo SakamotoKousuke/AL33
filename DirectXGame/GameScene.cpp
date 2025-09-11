@@ -49,6 +49,9 @@ GameScene::~GameScene() {
 
 void GameScene::Initialize() {
 	textureHandle_ = TextureManager::Load("uvChecker.png");
+
+
+
 	model_ = Model::Create();
 	camera_.Initialize();
 
@@ -60,9 +63,12 @@ void GameScene::Initialize() {
 
 	modelBlock_ = Model::CreateFromOBJ("block");
 
+	
+
 	//カメラを持たせる
 
-	
+		
+
 	mapChipField_ = new MapChipField;
 
 	
@@ -196,9 +202,11 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 
+	ChangePhase();
+
 	switch (phase_) { 
 	case Phase::kPlay:
-		CheckAllCollisions();
+		
 		break;
 
 	case Phase::kdeath:
@@ -274,7 +282,7 @@ void GameScene::Update() {
 
 	}
 	
-	
+	CheckAllCollisions();
 
 }
 
@@ -322,15 +330,31 @@ void GameScene::Draw() {
 
 void ::GameScene::ChangePhase() {
 
+	switch (phase_) {
+	case Phase::kPlay:
+
+		
 	if (player_->IsDead() == true) {
-		phase_ = Phase::kdeath;
+			phase_ = Phase::kdeath;
 
-		const Vector3& deathParticleaPosition = player_->GetWorldPosition();
-		deathParticles_ = new DeathParticles;
-		deathParticles_->Initialize(modelDeathParticles_, &camera_, deathParticleaPosition);
+			const Vector3& deathParticleaPosition = player_->GetWorldPosition();
 
+			deathParticles_ = new DeathParticles;
+			deathParticles_->Initialize(modelDeathParticles_, &camera_, deathParticleaPosition);
+		}
+
+		break;
+
+		case Phase::kdeath:
+
+			if (deathParticles_->IsFinished()) {
+			    finished_ = true;
+			}
 
 	}
+
+
+
 
 }
 

@@ -29,7 +29,7 @@ class DeathParticles {
 
 	static inline const float kAngleUnit = 2.0f * std::numbers::pi_v<float> / kNumParticles;
 
-
+	bool IsFinished() const { return isFinished_; }
 
 	bool isFinished_ = false;
 

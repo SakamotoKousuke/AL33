@@ -48,7 +48,7 @@ class TitleScene {
 
 	    // 終了フラグ (変数名に注意)
 		bool finished_ = false;
-
+		//ll
 		//フェード
 	    Fade* fade_ = nullptr;
 

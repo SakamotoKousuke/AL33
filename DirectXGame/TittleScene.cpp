@@ -7,6 +7,8 @@ TitleScene::~TitleScene() {
 	// モデル
 	delete model_;
 	delete modelPlayer_;
+
+	delete fade_;
 }
 // 初期化
 void TitleScene::Initialize() {
@@ -24,6 +26,10 @@ worldTransformPlayer_.Initialize();
 worldTransformPlayer_.scale_ = {10, 10, 10};
 worldTransformPlayer_.translation_ = {0, -8, 0};
 worldTransformPlayer_.rotation_.y = std::numbers::pi_v<float>;
+
+fade_ = new Fade();
+fade_->Initialize();
+fade_->Start(Fade::Status::FadeIn, 1.0f);
 }
 
 
@@ -44,8 +50,33 @@ void TitleScene::Update() {
 	// 行列を定数バッファに転送
 	worldTransformPlayer_.TransferMatrix();
 	// タイトルシーンの終了条件
-	if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+
+	/*if (Input::GetInstance()->PushKey(DIK_SPACE)) {
  		finished_ = true;
+	}*/
+
+	switch (phase_) {
+	case Phase::kMain:
+		// タイトルシーンの終了条件
+		if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+			// フェードアウト開始
+			phase_ = Phase::kFadeOut;
+			fade_->Start(Fade::Status::FadeOut, 1.0f);
+		}
+		break;
+	case Phase::kFadeIn:
+		// フェード
+		fade_->Update();
+		if (fade_->IsFinished()) {
+			phase_ = Phase::kMain;
+		}
+		break;
+	case Phase::kFadeOut:
+		// フェード
+		fade_->Update();
+		if (fade_->IsFinished()) {
+			finished_ = true;
+		}
 	}
 
 	/*finished_ = true;*/
@@ -64,4 +95,5 @@ void TitleScene::Draw() {
 	// 3Dモデル描画後処理
 	Model::PostDraw();
 
+	fade_->Draw();
 }

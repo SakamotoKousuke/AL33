@@ -8,17 +8,21 @@
 #include "CameraController.h"
 #include "MyMath.h"
 #include "DeathParticles.h"
-
+#include "GameScene.h"
+#include "Fade.h"
 
 class GameScene
 {
 
 	enum class Phase {
+		kFadeIn,
 		kPlay,
 		kdeath,
+		kFadeOut,
 	};
 	Phase phase_;
 
+	Fade* fade_ = nullptr;
 
 	public:
 

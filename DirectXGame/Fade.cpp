@@ -22,16 +22,19 @@ case Status::None:
 	// 何もしない
 	break;
 case Status::FadeIn:
-	// 1フレーム分の秒数をカウントアップ counter += 1.0f / 60.0f;
+	// 1フレーム分の秒数をカウントアップ 
+	counter_ += 1.0f / 60.0f;
 	// フェード継続時間に達したら打ち止め
 	if (counter_ >= duration_) {
+		counter_ = duration_;
 	}
-	counter_ = duration_;
+	
 	// 0.0fから1.0fの間で、経過時間がフェード継続時間に近づくほどアルファ値を大きくする
 	sprite_->SetColor(Vector4(0, 0, 0, 1.0f - std::clamp(counter_ / duration_, 0.0f, 1.0f)));
 	break;
 case Status::FadeOut:
-	// 1フレーム分の秒数をカウントアップ counter += 1.0f / 60.0f;
+	// 1フレーム分の秒数をカウントアップ 
+	counter_ += 1.0f / 60.0f;
 	// フェード継続時間に達したら打ち止め
 	if (counter_ >= duration_) {
 		counter_ = duration_;

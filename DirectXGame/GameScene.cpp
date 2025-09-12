@@ -17,6 +17,8 @@ GameScene::~GameScene() {
 	
 	delete modelEnemy_;
 
+	delete fade_;
+
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 		
@@ -75,7 +77,9 @@ void GameScene::Initialize() {
 	
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
 
-	phase_ = Phase::kPlay;
+
+
+	phase_ = Phase::kFadeIn;
 
 	// 自キャラの生成
 	player_ = new Player();
@@ -196,7 +200,10 @@ void GameScene::Initialize() {
 	//
 	//}
 
-
+	
+fade_ = new Fade();
+	fade_->Initialize();
+	fade_->Start(Fade::Status::FadeIn, 1.0f);
 	
 }
 
@@ -216,7 +223,19 @@ void GameScene::Update() {
 		}
 
 		break;
-
+	case Phase::kFadeIn:
+		// フェード
+		fade_->Update();
+		if (fade_->IsFinished()) {
+			phase_ = Phase::kPlay;
+		}
+		break;
+	case Phase::kFadeOut:
+		// フェード
+		fade_->Update();
+		if (fade_->IsFinished()) {
+			finished_ = true;
+		}
 
 	}
 
@@ -325,6 +344,8 @@ void GameScene::Draw() {
 	Model::PostDraw();
 
 	
+	fade_->Draw();
+	
 }
 
 
@@ -348,7 +369,9 @@ void ::GameScene::ChangePhase() {
 		case Phase::kdeath:
 
 			if (deathParticles_->IsFinished()) {
-			    finished_ = true;
+			   /* finished_ = true;*/
+			    phase_ = Phase::kFadeOut;
+			    fade_->Start(Fade::Status::FadeOut, 1.0f);
 			}
 
 	}
